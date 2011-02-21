@@ -59,8 +59,10 @@ if !exists("main_syntax")
   let main_syntax = 'php'
 endif
 
-runtime syntax/html.vim
-unlet b:current_syntax
+runtime! syntax/html.vim
+unlet! b:current_syntax
+" HTML syntax file turns on spelling for all top level words, we attempt to turn off
+syntax spell default
 
 " Set sync method if none declared
 if !exists("php_sync_method")
@@ -74,10 +76,10 @@ endif
 syn cluster htmlPreproc add=phpRegion
 
 syn include @sqlTop syntax/sql.vim
-
 syn sync clear
-unlet b:current_syntax
+unlet! b:current_syntax
 syn cluster sqlTop remove=sqlString,sqlComment
+
 if exists("php_sql_query")
   syn cluster phpAddStrings contains=@sqlTop
 endif
@@ -479,11 +481,13 @@ syn match phpNumber "\(-\=\<\d+\|-\=\)\.\d\+\>" contained display
 
 " SpecialChar
 syn match phpSpecialChar "\\[fnrtv\\]" contained display
-syn match phpSpecialChar "\\\d\{3}"  contained contains=phpOctalError display
+" Octals are 1-3 digits long
+syn match phpSpecialChar "\\\d\{1,3}"  contained contains=phpOctalError display
 syn match phpSpecialChar "\\x\x\{2}" contained display
 " corrected highlighting for an escaped '\$' inside a double-quoted string
 syn match phpSpecialChar "\\\$"  contained display
 syn match phpSpecialChar +\\"+   contained display
+syn match phpSpecialChar "\\\\"  contained display
 syn match phpStrEsc      "\\\\"  contained display
 syn match phpStrEsc      "\\'"   contained display
 
@@ -498,13 +502,13 @@ syn keyword phpTodo todo fixme xxx note contained
 
 " Comment
 if exists("php_parent_error_open")
-  syn region phpComment start="/\*" end="\*/" contained contains=phpTodo
+  syn region phpComment start="/\*" end="\*/" contained contains=phpTodo,@Spell
 else
-  syn region phpComment start="/\*" end="\*/" contained contains=phpTodo extend
+  syn region phpComment start="/\*" end="\*/" contained contains=phpTodo,@Spell extend
 endif
 if version >= 600
-  syn match phpComment  "#.\{-}\(?>\|$\)\@="  contained contains=phpTodo
-  syn match phpComment  "//.\{-}\(?>\|$\)\@=" contained contains=phpTodo
+  syn match phpComment  "#.\{-}\(?>\|$\)\@="  contained contains=phpTodo,@Spell
+  syn match phpComment  "//.\{-}\(?>\|$\)\@=" contained contains=phpTodo,@Spell
 else
   syn match phpComment  "#.\{-}$" contained contains=phpTodo
   syn match phpComment  "#.\{-}?>"me=e-2  contained contains=phpTodo
@@ -512,14 +516,14 @@ else
   syn match phpComment  "//.\{-}?>"me=e-2 contained contains=phpTodo
 endif
 
-" String
+" Strings, don't match phpStrEsc in double quoted strings, only single quoted
 if exists("php_parent_error_open")
-  syn region phpStringDouble matchgroup=None start=+"+ skip=+\\\\\|\\"+ end=+"+  contains=@phpAddStrings,phpIdentifier,phpSpecialChar,phpIdentifierSimply,phpIdentifierComplex,phpStrEsc contained keepend
-  syn region phpBacktick matchgroup=None start=+`+ skip=+\\\\\|\\"+ end=+`+  contains=@phpAddStrings,phpIdentifier,phpSpecialChar,phpIdentifierSimply,phpIdentifierComplex,phpStrEsc contained keepend
+  syn region phpStringDouble matchgroup=None start=+"+ skip=+\\\\\|\\"+ end=+"+  contains=@phpAddStrings,phpIdentifier,phpSpecialChar,phpIdentifierSimply,phpIdentifierComplex contained keepend
+  syn region phpBacktick matchgroup=None start=+`+ skip=+\\\\\|\\"+ end=+`+  contains=@phpAddStrings,phpIdentifier,phpSpecialChar,phpIdentifierSimply,phpIdentifierComplex contained keepend
   syn region phpStringSingle matchgroup=None start=+'+ skip=+\\\\\|\\'+ end=+'+  contains=@phpAddStrings,phpStrEsc contained keepend
 else
-  syn region phpStringDouble matchgroup=None start=+"+ skip=+\\\\\|\\"+ end=+"+  contains=@phpAddStrings,phpIdentifier,phpSpecialChar,phpIdentifierSimply,phpIdentifierComplex,phpStrEsc contained extend keepend
-  syn region phpBacktick matchgroup=None start=+`+ skip=+\\\\\|\\"+ end=+`+  contains=@phpAddStrings,phpIdentifier,phpSpecialChar,phpIdentifierSimply,phpIdentifierComplex,phpStrEsc contained extend keepend
+  syn region phpStringDouble matchgroup=None start=+"+ skip=+\\\\\|\\"+ end=+"+  contains=@phpAddStrings,phpIdentifier,phpSpecialChar,phpIdentifierSimply,phpIdentifierComplex contained extend keepend
+  syn region phpBacktick matchgroup=None start=+`+ skip=+\\\\\|\\"+ end=+`+  contains=@phpAddStrings,phpIdentifier,phpSpecialChar,phpIdentifierSimply,phpIdentifierComplex contained extend keepend
   syn region phpStringSingle matchgroup=None start=+'+ skip=+\\\\\|\\'+ end=+'+  contains=@phpAddStrings,phpStrEsc contained keepend extend
 endif
 
