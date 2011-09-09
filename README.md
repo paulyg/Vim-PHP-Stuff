@@ -18,16 +18,16 @@ The output file and selected extensions can be defined in two ways - by editing 
 or by passing command-line arguments to the script:
 
 * --out sets an output file:
-    php php_vimgen.php --out foo.bar
+	`php php_vimgen.php --out foo.bar`
 
 * --ext overrides $extensions, separate extension names with a comma or space character:
-    php php_vimgen.php --ext 'mysql,bz2,core'
+	`php php_vimgen.php --ext 'mysql,bz2,core'`
 
 * -m alongside --ext adds other extensions to the default $extensions list set in the file:
-    php php_vimgen.php --ext 'interbase,posix,readline' -m
+	`php php_vimgen.php --ext 'interbase,posix,readline' -m`
 
 * --not excludes extensions (set on the file or through a command-line argument):
-    php php_vimgen.php --ext 'readline,wddx' --not 'intl,tidy,xml'
+	`php php_vimgen.php --ext 'readline,wddx' --not 'intl,tidy,xml'`
 
 
 Vim will use this php.vim when you open up a PHP file instead of the distributed one. And
