@@ -45,13 +45,13 @@ $store = array();
 $errors = array();
 
 // Command-line arguments override the defaults set on this file:
-$cli_args = getopt('m', array('out:', 'ext:'));
+$cli_args = getopt('m', array('out:', 'ext:', 'not:'));
 if ($cli_args) {
 	if (isset($cli_args['out'])) {
 		$out_file = $cli_args['out'];
 	}
 	if (isset($cli_args['ext'])) {
-		$out_ext = (array) preg_split('/[ ,;\/]+/', $cli_args['ext']);
+		$out_ext = preg_split('/[ ,;\/]+/', $cli_args['ext']);
 
 		// if the boolean argument 'm' (merge) is given,
 		// merge the new extensions with the default,
@@ -62,6 +62,11 @@ if ($cli_args) {
 		else {
 			$extensions = $out_ext;
 		}
+	}
+	// exclude these extensions from the list:
+	if (isset($cli_args['not'])) {
+		$not_ext = preg_split('/[ ,;\/]+/', $cli_args['not']);
+		$extensions = array_diff($extensions, $not_ext);
 	}
 }
 
