@@ -6,9 +6,7 @@
  * @author Paul Garvin <paul@paulgarvin.net>
  * @copyright Copyright 2009 Paul Garvin
  * @license http://www.opensource.org/licenses/mit-license.php MIT License
- */
-
-/**
+ *
  * This script works by loading up PHP extensions and using reflection to pull
  * the functions, classes, and constants out of those extesions. The list of extensions
  * below are ones included with PHP 5.3 source code. The ones commented out depend on
@@ -23,7 +21,7 @@
  * functions, classes, or constants themselves. The constants and methods specific
  * to that driver are exposed though the PDO extension itself. The pdo_* extensions
  * must still be enabled (compiled in or loaded as shared) for these constants to show up.
- */ 
+ */
 $extensions = array(
 	'core',	'bcmath', 'bz2', 'calendar', 'com_dotnet',
 	'ctype', 'curl', 'date', /*'dba',*/	'dom',
@@ -46,8 +44,34 @@ $out_str = '';
 $store = array();
 $errors = array();
 
+// Command-line arguments override the defaults set on this file:
+$cli_args = getopt('m', array('out:', 'ext:', 'not:'));
+if ($cli_args) {
+	if (isset($cli_args['out'])) {
+		$out_file = $cli_args['out'];
+	}
+	if (isset($cli_args['ext'])) {
+		$out_ext = preg_split('/[ ,;\/]+/', $cli_args['ext']);
+
+		// if the boolean argument 'm' (merge) is given,
+		// merge the new extensions with the default,
+		// instead of overriding:
+		if (isset($cli_args['m'])) {
+			$extensions = array_merge($extensions, $out_ext);
+		}
+		else {
+			$extensions = $out_ext;
+		}
+	}
+	// exclude these extensions from the list:
+	if (isset($cli_args['not'])) {
+		$not_ext = preg_split('/[ ,;\/]+/', $cli_args['not']);
+		$extensions = array_diff($extensions, $not_ext);
+	}
+}
+
 foreach ($extensions as $ext) {
-	echo "Processing extension '$ext'." . PHP_EOL;
+	print "Processing extension '$ext'." . PHP_EOL;
 	try {
 		$extension  = new ReflectionExtension($ext);  
 		$ext_info = array();
@@ -78,7 +102,7 @@ foreach ($extensions as $ext) {
 
 	} catch (Exception $e) {
 		$errors[] = "\"Error: '$ext' " . $e->getMessage() . "\n";
-		echo 'Error Encountered.' . PHP_EOL;
+		print 'Error Encountered.' . PHP_EOL;
 	}
 
 	$store[$ext] = $ext_info;
@@ -110,5 +134,3 @@ foreach ($errors as $error) {
 }
 
 file_put_contents($out_file, $out_str);
-
-?>
