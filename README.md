@@ -11,14 +11,14 @@ Vim will use this `php.vim` when you open up a PHP file instead of the distribut
 since it is in your home directory it won't get wiped out when up update vim. Lastly you
 can always revert to the distributed version by deleting or renaming the file.
 
-##installation:##
+##Installation:##
 Use pathogen.vim or
-Create the following directories if they does not already exist and place `syntax\php.vim` inside of it.
-Unix: `/home/<username>/.vim/syntax/`  
-Windows up to & incl XP: `C:\Documents and Settings\<username>\_vim\syntax\`  
-Windows Vista & 7: `C:\Users\<username\_vim\syntax\`
+Create the following directory if it does not already exist and place `syntax\php.vim` inside of it.
+* Unix: `/home/<username>/.vim/syntax/`  
+* Windows up to & incl XP: `C:\Documents and Settings\<username>\_vim\syntax\`  
+* Windows Vista & 7: `C:\Users\<username\_vim\syntax\`
 
-##php-vimgen##
+##php_vimgen.php###
 In order to generate the list of functions, classes, and constants in PHP 5.3 I created a
 script that uses reflection to get these items. That script is included in the project as
 well. It will generate a file with the format and keywords for the Vim syntax highlighting
@@ -31,7 +31,7 @@ https://github.com/FilipeD). Note that if the extension is a dynamically loaded 
 and php can't load it the script will error out with out completing.
 Run `php php_vimgen.php` from your shell to make the file or see below.
 
-###usage:###
+###Usage:###
 The output file and selected extensions can be defined in two ways - by editing variables
 inside of `php_vimgen.php` or by passing command-line arguments to the script. CLI options
 override the variables inside the script.
