@@ -14,11 +14,12 @@ can always revert to the distributed version by deleting or renaming the file.
 ##Installation:##
 Use pathogen.vim or
 Create the following directory if it does not already exist and place `syntax\php.vim` inside of it.
+
 * Unix: `/home/<username>/.vim/syntax/`  
 * Windows up to & incl XP: `C:\Documents and Settings\<username>\_vim\syntax\`  
 * Windows Vista & 7: `C:\Users\<username\_vim\syntax\`
 
-##php_vimgen.php###
+##php_vimgen.php##
 In order to generate the list of functions, classes, and constants in PHP 5.3 I created a
 script that uses reflection to get these items. That script is included in the project as
 well. It will generate a file with the format and keywords for the Vim syntax highlighting
