@@ -545,7 +545,7 @@ endif
 " Parent
 if exists("php_parent_error_close") || exists("php_parent_error_open")
   syn match  phpParent "[{}]"  contained
-  syn region phpParent matchgroup=Delimiter start="(" end=")"  contained contains=@phpClInside transparent
+  syn region phpParent matchgroup=Delimiter start="(" end=")"  contained contains=@phpClFunction transparent
   syn region phpParent matchgroup=Delimiter start="\[" end="\]"  contained contains=@phpClInside transparent
   if !exists("php_parent_error_close")
     syn match phpParent "[\])]" contained
