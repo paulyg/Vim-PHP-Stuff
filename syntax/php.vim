@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language: PHP 5.3 & up
 " Maintainer: Paul Garvin <paul@paulgarvin.net>
-" Last Change:  April 2, 2010
+" Last Change:  October 12, 2012
 " URL: 
 "
 " Former Maintainer:  Peter Hodge <toomuchphp-vim@yahoo.com>
@@ -59,7 +59,7 @@ if !exists("main_syntax")
   let main_syntax = 'php'
 endif
 
-runtime! syntax/html.vim
+runtime syntax/html.vim
 unlet! b:current_syntax
 " HTML syntax file turns on spelling for all top level words, we attempt to turn off
 syntax spell default
@@ -466,7 +466,7 @@ syn match phpVarSelector    "\$"  contained display
 syn match phpMethodsVar     "->\h\w*" contained contains=phpMethods,phpMemberSelector display containedin=phpStringDouble
 
 " Identifier
-syn match  phpIdentifier         "$\h\w*"  contained contains=phpEnvVar,phpIntVar,phpVarSelector display
+syn match  phpIdentifier         "$\h\w*"  contained contains=phpSuperglobals,phpVarSelector display
 syn match  phpIdentifierSimply   "${\h\w*}"  contains=phpOperator,phpParent  contained display
 syn region phpIdentifierComplex  matchgroup=phpParent start="{\$"rs=e-1 end="}"  contains=phpIdentifier,phpMemberSelector,phpVarSelector,phpIdentifierArray contained extend
 syn region phpIdentifierArray    matchgroup=phpParent start="\[" end="]" contains=@phpClInside contained
@@ -620,7 +620,7 @@ endif
 if !exists("did_php_syn_inits")
 
   hi def link phpComment          Comment
-  hi def link phpSuperglobals     Constant
+  hi def link phpSuperglobals     Type
   hi def link phpMagicConstants   Constant
   hi def link phpServerVars       Constant
   hi def link phpConstants        Constant
