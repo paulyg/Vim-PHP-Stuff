@@ -1,7 +1,9 @@
 set nocompatible	" Vim mode vs vi mode
 set autoindent
 set smartindent
+set expandtab
 set tabstop=4
+set shiftwidth=4
 set shiftwidth=4
 set showmatch		" Highlight closing ), >, }, ], etc...
 set ruler			" Show row,col in cmd line
@@ -12,9 +14,38 @@ set smartcase		" Don't ignore case if search string contains uppercase letters
 set number			" Display line numbers
 set nobackup		" No backup files
 syntax on
-if !has("gui_running")
-	colorscheme 256-jungle
+
+if has("gui_running")
+    set lines=45
+    set columns=100
+    behave mswin
+    set guioptions -=t	" No tearoff in menus
+    set confirm			" Give confirm popup if quit w/o saving changes
+    set wildmenu
+    set wildmode=list:longest
 endif
+
+" clear out search buffer easier
+nmap <silent> ,/ :let @/=""<CR>
+
+" Change cwd to file we are currently editing
+autocmd BufEnter * cd %:p:h
+
+" Enable lint checking for PHP files
+set makeprg=php\ -l\ %
+set errorformat=%m\ in\ %f\ on\ line\ %l
+
+let php_parent_error_close=1
+
+" If we are using Javascript, we need 2 spaces indents and not tabs
+autocmd FileType javascript set sw=2
+autocmd FileType javascript set ts=2
+autocmd FileType javascript set sts=2
+
+" Ditto for HTML
+autocmd FileType html set sw=2
+autocmd FileType html set ts=2
+autocmd FileType html set sts=2
 
 " The rest of these options are from mswin.vim to make Vim behave more like
 " Windows.
@@ -50,8 +81,9 @@ noremap <C-Z> u
 inoremap <C-Z> <C-O>u
 
 " CTRL-Y is Redo (although not repeat); not in cmdline though
-noremap <C-Y> <C-R>
-inoremap <C-Y> <C-O><C-R>
+" Commented out b/c it clashes with zencoding plugin
+" noremap <C-Y> <C-R>
+" inoremap <C-Y> <C-O><C-R>
 
 " CTRL-A is Select all
 noremap <C-A> gggH<C-O>G
@@ -66,3 +98,21 @@ noremap <C-Tab> <C-W>w
 inoremap <C-Tab> <C-O><C-W>w
 cnoremap <C-Tab> <C-C><C-W>w
 onoremap <C-Tab> <C-C><C-W>w
+
+" https://github.com/tpope/vim-pathogen
+execute pathogen#infect()
+
+"https://github.com/bling/vim-airline
+"let g:airline_theme=''
+set laststatus=2
+
+" https://github.com/scrooloose/nerdtree
+map <C-t> :NERDTreeToggle<CR>
+
+" https://github.com/altercation/vim-colors-solarized
+if !has("gui_running")
+    set t_Co=256
+    set background=dark
+    let g:solarized_termcolors=256
+    colorscheme solarized
+endif
